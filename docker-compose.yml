@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=tree
+      - MYSQL_ROOT_HOST=% 
       - MYSQL_DATABASE=issue_tracker
       - MYSQL_USER=issues
       - MYSQL_PASSWORD=issues
