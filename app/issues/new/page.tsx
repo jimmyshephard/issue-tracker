@@ -35,23 +35,25 @@ function NewIssuePage() {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const router = useRouter();
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            setIsSubmitting(true);
+            await axios.post('/api/issues', data);
+            router.push('/issues');
+        } catch (error) {
+            console.error('Error creating issue:', error);
+            setError('Failed to create issue. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    });
+
     return (
         <div className="max-w-xl">
             {error && <Callout.Root className="mb-5" color="red" variant="soft">
               <Callout.Text>{error}</Callout.Text>
             </Callout.Root>}
-            <form className="space-y-3" onSubmit={handleSubmit(async (data) => {
-                try {
-                    setIsSubmitting(true);
-                    await axios.post('/api/issues', data);
-                    router.push('/issues');
-                } catch (error) {
-                    console.error('Error creating issue:', error);
-                    setError('Failed to create issue. Please try again.');
-                } finally {
-                    setIsSubmitting(false);
-                }
-            })}>
+            <form className="space-y-3" onSubmit={onSubmit}>
                 <h1>New Issue</h1>
                 <TextField.Root placeholder="Enter issue title" {...register('title')} >
 
