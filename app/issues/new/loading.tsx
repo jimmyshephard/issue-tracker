@@ -1,8 +1,13 @@
 import React from 'react'
+import { Box } from '@radix-ui/themes';
+import Skeleton from 'react-loading-skeleton';
 
 const Loading = () => {
     return (
-        <div>Loading issue....</div>
+        <Box className='max-w-xl'>
+           <Skeleton/>
+            <Skeleton height='20rem'/>
+        </Box>
     )
 }
 export default Loading

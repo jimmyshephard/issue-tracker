@@ -8,11 +8,11 @@ interface Props {
 }
 const Link = ({href, children}: Props) => {
     return (
-        <NextLink href={href} passHref legacyBehavior={true}>
-            <RadixLink>
+        <RadixLink asChild>
+            <NextLink href={href}>
                 {children}
-            </RadixLink>
-        </NextLink>
+            </NextLink>
+        </RadixLink>
     )
 }
 export default Link
