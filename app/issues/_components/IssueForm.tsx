@@ -31,7 +31,13 @@ function IssueForm({issue}: { issue?: Issue }) {
         handleSubmit,
         control,
         formState: {errors}
-    } = useForm<IssueFormData>({resolver: zodResolver(issueSchema)});
+    } = useForm<IssueFormData>({
+        resolver: zodResolver(issueSchema),
+        defaultValues: {
+            title: issue?.title || '',
+            description: issue?.description || ''
+        }
+    });
     const [error, setError] = React.useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -39,7 +45,13 @@ function IssueForm({issue}: { issue?: Issue }) {
     const onSubmit = handleSubmit(async (data) => {
         try {
             setIsSubmitting(true);
-            await axios.post('/api/issues', data);
+            if (issue) {
+                console.log("Targeting Patch URL:", `/api/issues/${issue.id}`);
+                await axios.patch(`/api/issues/${issue.id}`, data);
+            } else {
+                console.log('POSTING....');
+                await axios.post('/api/issues', data);
+            }
             router.push('/issues');
         } catch (error) {
             console.error('Error creating issue:', error);
@@ -56,7 +68,7 @@ function IssueForm({issue}: { issue?: Issue }) {
             </Callout.Root>}
             <form className="space-y-3" onSubmit={onSubmit}>
                 <h1>New Issue</h1>
-                <TextField.Root defaultValue={issue?.title} placeholder="Enter issue title" {...register('title')} >
+                <TextField.Root placeholder="Enter issue title" {...register('title')} >
 
                 </TextField.Root>
                 <ErrorMessage>
@@ -64,14 +76,14 @@ function IssueForm({issue}: { issue?: Issue }) {
                 </ErrorMessage>
 
                 <Controller name="description" control={control}
-                            defaultValue={issue?.description}
                             render={({field}) => <SimpleMDE placeholder="Description" {...field} />}/>
                 <ErrorMessage>
                     {errors?.description?.message}
                 </ErrorMessage>
 
                 <Button variant="solid" type="submit" disabled={isSubmitting}>
-                    Submit New Issue {isSubmitting && <Spinner/>}
+                    {issue ? 'Update Issue' : 'Submit New Issue'} {' '}
+                    {isSubmitting && <Spinner/>}
                 </Button>
             </form>
         </div>
