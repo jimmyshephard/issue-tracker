@@ -7,13 +7,13 @@ import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createIssueSchema } from '@/app/validationSchemas';
+import { issueSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import { Issue } from '@prisma/client';
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof issueSchema>;
 
 // Force Next.js to grab the specific named component instead of the module default
 const SimpleMDE = dynamic(
@@ -31,7 +31,7 @@ function IssueForm({issue}: { issue?: Issue }) {
         handleSubmit,
         control,
         formState: {errors}
-    } = useForm<IssueFormData>({resolver: zodResolver(createIssueSchema)});
+    } = useForm<IssueFormData>({resolver: zodResolver(issueSchema)});
     const [error, setError] = React.useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
