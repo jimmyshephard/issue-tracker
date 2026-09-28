@@ -53,6 +53,7 @@ function IssueForm({issue}: { issue?: Issue }) {
                 await axios.post('/api/issues', data);
             }
             router.push('/issues');
+            router.refresh();
         } catch (error) {
             console.error('Error creating issue:', error);
             setError('Failed to create issue. Please try again.');
