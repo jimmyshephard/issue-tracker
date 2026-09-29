@@ -3,7 +3,6 @@ import React from 'react';
 import { TextField, Button, Callout, Text } from '@radix-ui/themes'
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from 'react-hook-form';
-import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,17 +11,10 @@ import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 import { Issue } from '@prisma/client';
+import SimpleMDE from 'react-simplemde-editor';
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
-// Force Next.js to grab the specific named component instead of the module default
-const SimpleMDE = dynamic(
-    () => import('react-simplemde-editor').then((mod) => mod.SimpleMdeReact),
-    {
-        ssr: false,
-        loading: () => <p>Loading editor...</p>
-    }
-);
 
 
 function IssueForm({issue}: { issue?: Issue }) {
