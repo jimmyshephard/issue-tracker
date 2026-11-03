@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { AiFillBug } from 'react-icons/ai'
 import classNames from 'classnames'
 import { useSession } from 'next-auth/react';
-import { Box, Container, Flex } from '@radix-ui/themes';
+import { Avatar, Box, Container, Flex, DropdownMenu, Text } from '@radix-ui/themes';
 
 function Navbar() {
     const currentPath = usePathname();
@@ -33,13 +33,32 @@ function Navbar() {
                         </ul>
                     </Flex>
                     <Box>
-                        {status === 'authenticated' && <Link href="/api/auth/signout">Log Out</Link>}
+                        {status === 'authenticated' && (
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger>
+                                    <Avatar
+                                        referrerPolicy="no-referrer"
+                                        className="cursor-pointer"
+                                        src={session.user!.image!} fallback="?" size="2" radius="full"/>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content sideOffset={5} align="end">
+                                    <DropdownMenu.Label>
+                                        <Text size="2">
+                                            <DropdownMenu.Label>{session.user!.email}</DropdownMenu.Label>
+                                        </Text>
+                                    </DropdownMenu.Label>
+                                    <DropdownMenu.Item>
+                                        <Link href="/api/auth/signout">Log Out</Link>
+                                    </DropdownMenu.Item>
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        )}
                         {status === 'unauthenticated' && <Link href="/api/auth/signin">Login</Link>}
                     </Box>
                 </Flex>
             </Container>
         </nav>
-    )
+    );
 }
 
 export default Navbar
